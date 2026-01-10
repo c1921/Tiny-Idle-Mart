@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
+  onMounted(() => {
+    setTimeout(() => window.HSStaticMethods.autoInit(), 100)
+  });
 import ActivityLog from "./components/ActivityLog.vue";
 import EventPanel from "./components/EventPanel.vue";
 import GameHeader from "./components/GameHeader.vue";
