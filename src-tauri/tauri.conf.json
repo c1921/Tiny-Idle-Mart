@@ -12,9 +12,10 @@
   "app": {
     "windows": [
       {
-        "title": "tiny-idle-mart",
+        "title": "Tiny Idle Mart",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "decorations": false
       }
     ],
     "security": {
