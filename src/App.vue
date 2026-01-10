@@ -2,6 +2,7 @@
 import { onMounted } from "vue";
 import ActivityLog from "./components/ActivityLog.vue";
 import AppTitlebar from "./components/AppTitlebar.vue";
+import BottomBar from "./components/BottomBar.vue";
 import EventPanel from "./components/EventPanel.vue";
 import GameHeader from "./components/GameHeader.vue";
 import ProductsPanel from "./components/ProductsPanel.vue";
@@ -31,10 +32,12 @@ const {
 </script>
 
 <template>
-  <div class="h-screen overflow-hidden bg-base-200 font-sans text-base-content">
-    <AppTitlebar />
-    <div class="h-full overflow-y-auto mt-10">
-      <main class="mx-auto flex w-full max-w-225 flex-col gap-5 px-5 pb-12 pt-5">
+  <div class="flex h-screen flex-col bg-base-200 font-sans text-base-content">
+    <header>
+      <AppTitlebar />
+    </header>
+    <div class="flex-1 min-h-0 overflow-y-auto">
+      <main class="mx-auto flex w-full max-w-225 flex-col gap-5 px-5 py-5">
         <GameHeader
           :paused-by-player="pausedByPlayer"
           @toggle-pause="togglePause"
@@ -60,5 +63,13 @@ const {
         <ActivityLog :log="log" />
       </main>
     </div>
+    <footer>
+      <BottomBar
+        :time-label="timeLabel"
+        :money="money"
+        :event-title="eventTitle"
+        :has-event="pausedByEvent"
+      />
+    </footer>
   </div>
 </template>
