@@ -11,65 +11,22 @@ const emit = defineEmits<{ (e: "select", index: number): void }>();
 </script>
 
 <template>
-  <section class="panel event-panel">
-    <h2>{{ props.eventTitle }}</h2>
-    <p>{{ props.eventBody }}</p>
-    <div class="event-options">
+  <section class="grid gap-3 rounded-2xl bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40">
+    <h2 class="text-lg font-semibold">{{ props.eventTitle }}</h2>
+    <p class="text-sm text-base-content/60">{{ props.eventBody }}</p>
+    <div class="grid gap-2">
       <button
         v-for="(option, index) in props.eventOptions"
         :key="option.label"
+        class="btn btn-warning btn-block flex-col items-start gap-1 text-left"
         type="button"
         @click="emit('select', index)"
       >
         {{ option.label }}
-        <span v-if="option.note" class="note">{{ option.note }}</span>
+        <span v-if="option.note" class="text-xs font-medium text-base-content/70">
+          {{ option.note }}
+        </span>
       </button>
     </div>
   </section>
 </template>
-
-<style scoped>
-.panel {
-  border-radius: 16px;
-  padding: 18px 20px;
-  background: #ffffff;
-  box-shadow: 0 10px 24px rgba(20, 20, 20, 0.06);
-  display: grid;
-  gap: 10px;
-}
-
-h2 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-p {
-  margin: 0;
-  color: #5b5750;
-}
-
-.event-options {
-  display: grid;
-  gap: 10px;
-}
-
-button {
-  border: none;
-  border-radius: 12px;
-  padding: 10px 14px;
-  background: #f2b66d;
-  color: #1b1b1b;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-}
-
-.note {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #6c655c;
-}
-</style>

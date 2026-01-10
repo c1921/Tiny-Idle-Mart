@@ -3,43 +3,19 @@ const props = defineProps<{ log: string[] }>();
 </script>
 
 <template>
-  <section class="panel log">
-    <h2>Recent activity</h2>
-    <ul>
-      <li v-if="props.log.length === 0">No activity yet.</li>
-      <li v-for="(entry, index) in props.log" :key="index">
+  <section class="grid gap-4 rounded-2xl bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40">
+    <h2 class="text-lg font-semibold">Recent activity</h2>
+    <ul class="grid gap-2">
+      <li v-if="props.log.length === 0" class="rounded-xl bg-base-200 px-3 py-2 text-sm text-base-content/60">
+        No activity yet.
+      </li>
+      <li
+        v-for="(entry, index) in props.log"
+        :key="index"
+        class="rounded-xl bg-base-200 px-3 py-2 text-sm"
+      >
         {{ entry }}
       </li>
     </ul>
   </section>
 </template>
-
-<style scoped>
-.panel {
-  border-radius: 16px;
-  padding: 18px 20px;
-  background: #ffffff;
-  box-shadow: 0 10px 24px rgba(20, 20, 20, 0.06);
-  display: grid;
-  gap: 16px;
-}
-
-h2 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 6px;
-}
-
-li {
-  padding: 10px 12px;
-  border-radius: 12px;
-  background: #f7f4ed;
-}
-</style>
