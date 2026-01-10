@@ -4,7 +4,6 @@ import ActivityLog from "./components/ActivityLog.vue";
 import AppTitlebar from "./components/AppTitlebar.vue";
 import BottomBar from "./components/BottomBar.vue";
 import EventPanel from "./components/EventPanel.vue";
-import GameHeader from "./components/GameHeader.vue";
 import ProductsPanel from "./components/ProductsPanel.vue";
 import StatsPanel from "./components/StatsPanel.vue";
 import { useGame } from "./composables/useGame";
@@ -38,10 +37,6 @@ const {
     </header>
     <div class="flex-1 min-h-0 overflow-y-auto">
       <main class="mx-auto flex w-full max-w-225 flex-col gap-5 px-5 py-5">
-        <GameHeader
-          :paused-by-player="pausedByPlayer"
-          @toggle-pause="togglePause"
-        />
         <StatsPanel
           :time-label="timeLabel"
           :money="money"
@@ -69,6 +64,8 @@ const {
         :money="money"
         :event-title="eventTitle"
         :has-event="pausedByEvent"
+        :paused-by-player="pausedByPlayer"
+        @toggle-pause="togglePause"
       />
     </footer>
   </div>

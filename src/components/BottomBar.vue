@@ -4,13 +4,15 @@ const props = defineProps<{
   money: number;
   eventTitle: string;
   hasEvent: boolean;
+  pausedByPlayer: boolean;
 }>();
+const emit = defineEmits<{ (e: "toggle-pause"): void }>();
 </script>
 
 <template>
   <div class="bg-base-300">
     <div
-      class="mx-auto flex h-12 w-full max-w-225 flex-wrap items-center justify-between gap-3 px-4 text-xs sm:text-sm"
+      class="mx-auto flex min-h-12 w-full max-w-225 flex-wrap items-center justify-between gap-3 px-4 py-2 text-xs sm:text-sm"
     >
       <div class="flex items-center gap-2">
         <span class="icon-[tabler--clock] text-base-content/60"></span>
@@ -34,6 +36,9 @@ const props = defineProps<{
           {{ props.hasEvent ? props.eventTitle : "No event" }}
         </span>
       </div>
+      <button class="btn btn-success btn-xs" type="button" @click="emit('toggle-pause')">
+        {{ props.pausedByPlayer ? "Resume" : "Pause" }}
+      </button>
     </div>
   </div>
 </template>
