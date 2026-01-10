@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { nextTick, onMounted, watch } from "vue";
 import ActivityLog from "./components/ActivityLog.vue";
 import AppTitlebar from "./components/AppTitlebar.vue";
 import BottomBar from "./components/BottomBar.vue";
@@ -28,6 +28,12 @@ const {
   togglePause,
   handleEventOption,
 } = useGame();
+
+watch(pausedByEvent, async (isActive) => {
+  if (!isActive) return;
+  await nextTick();
+  window.HSStaticMethods?.autoInit();
+});
 </script>
 
 <template>
@@ -48,13 +54,6 @@ const {
           :products="productRows"
           @buy="buyStock"
         />
-        <EventPanel
-          v-if="pausedByEvent"
-          :event-title="eventTitle"
-          :event-body="eventBody"
-          :event-options="eventOptionsView"
-          @select="handleEventOption"
-        />
         <ActivityLog :log="log" />
       </main>
     </div>
@@ -68,5 +67,12 @@ const {
         @toggle-pause="togglePause"
       />
     </footer>
+    <EventPanel
+      v-if="pausedByEvent"
+      :event-title="eventTitle"
+      :event-body="eventBody"
+      :event-options="eventOptionsView"
+      @select="handleEventOption"
+    />
   </div>
 </template>

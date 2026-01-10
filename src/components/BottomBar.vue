@@ -13,7 +13,7 @@ const emit = defineEmits<{ (e: "toggle-pause"): void }>();
   <div class="bg-base-300">
     <div class="mx-auto flex w-full flex-wrap items-center gap-3 px-4">
       <button :class="[
-        'btn',
+        'btn btn-text',
         props.hasEvent ? 'cursor-not-allowed opacity-80' : 'cursor-pointer',
       ]" type="button" :disabled="props.hasEvent" @click="emit('toggle-pause')">
         <span :class="[
@@ -29,11 +29,19 @@ const emit = defineEmits<{ (e: "toggle-pause"): void }>();
         ]" aria-hidden="true"></span>
         {{ props.timeLabel }}
       </button>
-      <button class="btn">
+      <button class="btn btn-text">
         <span class="icon-[tabler--coin] size-4.5 shrink-0"></span>
         ${{ props.money }}
       </button>
-      <button class="btn">
+      <button
+        class="btn btn-text"
+        type="button"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="event-modal"
+        data-overlay="#event-modal"
+        :disabled="!props.hasEvent"
+      >
         <div class="indicator">
           <span :class="[
             'indicator-item size-2 rounded-full',

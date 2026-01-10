@@ -1,5 +1,9 @@
 @import "tailwindcss";
-@plugin "flyonui";
+
+@plugin "flyonui" {
+    themes: light --default, mydark --prefersdark;
+}
+
 @import "flyonui/variants.css";
 @source "../node_modules/flyonui/flyonui.js";
 @plugin "@iconify/tailwind4";
@@ -17,34 +21,34 @@
 @plugin "flyonui/theme" {
     name: "mydark";
     default: false;
-    prefersdark: false;
-    color-scheme: "dark";
-    --color-base-100: oklch(23.8% 0 0);
-    --color-base-200: oklch(20.3% 0 0);
-    --color-base-300: oklch(7.3% 0 0);
-    --color-base-content: oklch(82.6% 0 256.847);
-    --color-primary: oklch(58% 0.233 277.117);
-    --color-primary-content: oklch(96% 0.018 272.314);
-    --color-secondary: oklch(65% 0.241 354.308);
-    --color-secondary-content: oklch(94% 0.028 342.258);
-    --color-accent: oklch(77% 0.152 181.912);
-    --color-accent-content: oklch(38% 0.063 188.416);
-    --color-neutral: oklch(14% 0.005 285.823);
-    --color-neutral-content: oklch(92% 0.004 286.32);
-    --color-info: oklch(74% 0.16 232.661);
-    --color-info-content: oklch(29% 0.066 243.157);
-    --color-success: oklch(76% 0.177 163.223);
-    --color-success-content: oklch(37% 0.077 168.94);
-    --color-warning: oklch(82% 0.189 84.429);
-    --color-warning-content: oklch(41% 0.112 45.904);
-    --color-error: oklch(71% 0.194 13.428);
-    --color-error-content: oklch(27% 0.105 12.094);
-    --radius-selector: 0.5rem;
-    --radius-field: 0.25rem;
-    --radius-box: 0.5rem;
+    prefersdark: true;
+    color-scheme: dark;
+    --color-base-100: oklch(0.3092 0 0);
+    --color-base-200: oklch(0.2435 0 0);
+    --color-base-300: oklch(0.2178 0 0);
+    --color-base-content: oklch(96% 0.001 286.375);
+    --color-primary: oklch(0.71 0.15 239.15);
+    --color-primary-content: oklch(0.94 0.03 232.39);
+    --color-secondary: oklch(88% 0.059 254.128);
+    --color-secondary-content: oklch(0 0 0);
+    --color-accent: oklch(0.5636 0.0173 273.66);
+    --color-accent-content: oklch(86% 0.022 252.894);
+    --color-neutral: oklch(86% 0.022 252.894);
+    --color-neutral-content: oklch(14% 0 0);
+    --color-info: oklch(0.6 0.1 269.83);
+    --color-info-content: oklch(0.9 0.01 238.47);
+    --color-success: oklch(0.7 0.15 159.83);
+    --color-success-content: oklch(0.9 0.01 238.47);
+    --color-warning: oklch(0.8 0.1 100.65);
+    --color-warning-content: oklch(0 0 0);
+    --color-error: oklch(0.64 0.25 19.69);
+    --color-error-content: oklch(0.9 0.01 238.47);
+    --radius-selector: 0rem;
+    --radius-field: 0rem;
+    --radius-box: 0rem;
     --size-selector: 0.25rem;
     --size-field: 0.25rem;
     --border: 1px;
-    --depth: 0;
+    --depth: 1;
     --noise: 0;
 }

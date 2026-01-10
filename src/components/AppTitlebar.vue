@@ -25,7 +25,7 @@ function closeWindow() {
       <button
         data-tauri-drag-region="false"
         type="button"
-        class="btn btn-sm btn-square bg-base-300 hover:bg-base-100"
+        class="btn btn-sm btn-square btn-text hover:bg-base-100"
         aria-label="Minimize"
         @click="minimize"
       >
@@ -34,7 +34,7 @@ function closeWindow() {
       <button
         data-tauri-drag-region="false"
         type="button"
-        class="btn btn-sm btn-square bg-base-300 hover:bg-base-100"
+        class="btn btn-sm btn-square btn-text hover:bg-base-100"
         aria-label="Maximize"
         @click="toggleMaximize"
       >
@@ -43,7 +43,7 @@ function closeWindow() {
       <button
         data-tauri-drag-region="false"
         type="button"
-        class="btn btn-sm btn-square hover:bg-error hover:text-error-content"
+        class="btn btn-sm btn-square btn-text hover:bg-error hover:text-error-content"
         aria-label="Close"
         @click="closeWindow"
       >
