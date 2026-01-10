@@ -19,35 +19,35 @@ function closeWindow() {
 <template>
   <div
     data-tauri-drag-region
-    class="flex h-10 items-center justify-end bg-base-300 px-2"
+    class="flex h-8 items-center justify-end bg-base-300"
   >
     <div class="flex gap-1">
       <button
         data-tauri-drag-region="false"
         type="button"
-        class="btn btn-text btn-xs btn-square"
+        class="btn btn-sm btn-square bg-base-300 hover:bg-base-100"
         aria-label="Minimize"
         @click="minimize"
       >
-        <span class="icon-[tabler--minus] text-base"></span>
+        <span class="icon-[tabler--minus] size-4.5 shrink-0"></span>
       </button>
       <button
         data-tauri-drag-region="false"
         type="button"
-        class="btn btn-text btn-xs btn-square"
+        class="btn btn-sm btn-square bg-base-300 hover:bg-base-100"
         aria-label="Maximize"
         @click="toggleMaximize"
       >
-        <span class="icon-[tabler--square] text-base"></span>
+        <span class="icon-[tabler--square] size-4.5 shrink-0"></span>
       </button>
       <button
         data-tauri-drag-region="false"
         type="button"
-        class="btn btn-text btn-xs btn-square hover:bg-error hover:text-error-content"
+        class="btn btn-sm btn-square hover:bg-error hover:text-error-content"
         aria-label="Close"
         @click="closeWindow"
       >
-        <span class="icon-[tabler--x] text-base"></span>
+        <span class="icon-[tabler--x] size-4.5 shrink-0"></span>
       </button>
     </div>
   </div>
