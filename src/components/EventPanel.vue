@@ -11,7 +11,7 @@ const emit = defineEmits<{ (e: "select", index: number): void }>();
 </script>
 
 <template>
-  <section class="grid gap-3 rounded-2xl bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40">
+  <section class="grid gap-3 rounded-box bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40">
     <h2 class="text-lg font-semibold">{{ props.eventTitle }}</h2>
     <p class="text-sm text-base-content/60">{{ props.eventBody }}</p>
     <div class="grid gap-2">

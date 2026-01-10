@@ -25,7 +25,7 @@ function selectProduct(id: string) {
 
 <template>
   <section
-    class="grid gap-4 rounded-2xl bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40 md:grid-cols-3"
+    class="grid gap-4 rounded-box bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40 md:grid-cols-3"
   >
     <div class="flex flex-col gap-3">
       <span class="text-xs font-semibold uppercase tracking-[0.2em] text-base-content/60">Product</span>

@@ -26,7 +26,7 @@ function onInput(event: Event) {
 </script>
 
 <template>
-  <section class="rounded-2xl bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40">
+  <section class="rounded-box bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40">
     <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
       <div>
         <span class="text-xs font-semibold uppercase tracking-[0.2em] text-base-content/60">

@@ -9,7 +9,7 @@ const props = defineProps<{
 
 <template>
   <section
-    class="grid gap-4 rounded-2xl bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40 sm:grid-cols-2"
+    class="grid gap-4 rounded-box bg-base-100 p-5 shadow-lg ring-1 ring-base-300/40 sm:grid-cols-2"
   >
     <div class="flex flex-col gap-1">
       <span class="text-xs font-semibold uppercase tracking-[0.2em] text-base-content/60">
