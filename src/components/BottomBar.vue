@@ -11,33 +11,42 @@ const emit = defineEmits<{ (e: "toggle-pause"): void }>();
 
 <template>
   <div class="bg-base-300">
-    <div
-      class="mx-auto flex min-h-12 w-full max-w-225 flex-wrap items-center justify-between gap-3 px-4 py-2 text-xs sm:text-sm"
-    >
-      <div class="flex items-center gap-2">
-        <span class="icon-[tabler--clock] text-base-content/60"></span>
-        <span class="font-semibold">{{ props.timeLabel }}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="icon-[tabler--coin] text-base-content/60"></span>
-        <span class="font-semibold">${{ props.money }}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="relative inline-flex items-center">
-          <span class="icon-[tabler--bell] text-base-content/60"></span>
-          <span
-            :class="[
-              'absolute -right-1 -top-1 h-2 w-2 rounded-full',
-              props.hasEvent ? 'bg-warning' : 'bg-base-300',
-            ]"
-          ></span>
-        </span>
-        <span class="font-semibold">
+    <div class="mx-auto flex w-full flex-wrap items-center gap-3 px-4">
+      <button :class="[
+        'btn',
+        props.hasEvent ? 'cursor-not-allowed opacity-80' : 'cursor-pointer',
+      ]" type="button" :disabled="props.hasEvent" @click="emit('toggle-pause')">
+        <span :class="[
+          props.hasEvent || props.pausedByPlayer
+            ? 'icon-[tabler--player-play]'
+            : 'icon-[tabler--player-pause]',
+          props.hasEvent
+            ? 'text-warning'
+            : props.pausedByPlayer
+              ? 'text-error'
+              : 'text-base-content',
+              'size-4.5 shrink-0',
+        ]" aria-hidden="true"></span>
+        {{ props.timeLabel }}
+      </button>
+      <button class="btn">
+        <span class="icon-[tabler--coin] size-4.5 shrink-0"></span>
+        ${{ props.money }}
+      </button>
+      <button class="btn">
+        <div class="indicator">
+          <span :class="[
+            'indicator-item size-2 rounded-full',
+            props.hasEvent ? 'bg-primary' : 'bg-base-300',
+          ]"></span>
+          <span :class="[
+            'icon-[tabler--bell] size-4.5 shrink-0',
+            props.hasEvent ? 'text-primary' : '',
+          ]"></span>
+        </div>
+        <span class="truncate">
           {{ props.hasEvent ? props.eventTitle : "No event" }}
         </span>
-      </div>
-      <button class="btn btn-success btn-xs" type="button" @click="emit('toggle-pause')">
-        {{ props.pausedByPlayer ? "Resume" : "Pause" }}
       </button>
     </div>
   </div>
