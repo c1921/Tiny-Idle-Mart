@@ -19,7 +19,18 @@ export function useGame() {
     drink: 6,
     toy: 2,
   });
+  const totalSales = ref<Record<string, number>>({
+    snack: 0,
+    drink: 0,
+    toy: 0,
+  });
+  const dailySales = ref<Record<string, number>>({
+    snack: 0,
+    drink: 0,
+    toy: 0,
+  });
   const buyAmount = ref(5);
+  const currentDay = ref(1);
 
   const pausedByPlayer = ref(false);
   const pausedByEvent = ref(false);
@@ -32,13 +43,21 @@ export function useGame() {
 
   const isPaused = computed(() => pausedByPlayer.value || pausedByEvent.value);
   const productRows = computed(() =>
-    products.value.map((product) => ({
-      id: product.id,
-      name: product.name,
-      buyCost: product.buyCost,
-      sellPrice: product.sellPrice,
-      stock: inventory.value[product.id] ?? 0,
-    }))
+    products.value.map((product) => {
+      const profit = product.sellPrice - product.buyCost;
+      const margin = product.sellPrice > 0 ? profit / product.sellPrice : 0;
+      return {
+        id: product.id,
+        name: product.name,
+        buyCost: product.buyCost,
+        sellPrice: product.sellPrice,
+        stock: inventory.value[product.id] ?? 0,
+        profit,
+        margin,
+        totalSales: totalSales.value[product.id] ?? 0,
+        dailySales: dailySales.value[product.id] ?? 0,
+      };
+    })
   );
 
   function pushLog(message: string) {
@@ -55,6 +74,11 @@ export function useGame() {
     const hh = String(hour).padStart(2, "0");
     const mm = String(minute).padStart(2, "0");
     return { day, hh, mm };
+  }
+
+  function getDay(minutesTotal: number) {
+    const minutesInDay = 24 * 60;
+    return Math.floor(minutesTotal / minutesInDay) + 1;
   }
 
   const timeLabel = computed(() => {
@@ -134,12 +158,21 @@ export function useGame() {
     const bought = Math.min(desired, available);
     const revenue = bought * pick.sellPrice;
     inventory.value[pick.id] = available - bought;
+    totalSales.value[pick.id] = (totalSales.value[pick.id] ?? 0) + bought;
+    dailySales.value[pick.id] = (dailySales.value[pick.id] ?? 0) + bought;
     money.value += revenue;
     pushLog(`Customer bought ${bought} ${pick.name} (+$${revenue})`);
   }
 
   function tick() {
     totalMinutes.value += 1;
+    const nextDay = getDay(totalMinutes.value + START_MINUTES);
+    if (nextDay !== currentDay.value) {
+      currentDay.value = nextDay;
+      dailySales.value = Object.fromEntries(
+        products.value.map((item) => [item.id, 0])
+      ) as Record<string, number>;
+    }
     customerStep();
     maybeTriggerEvent();
   }

@@ -7,6 +7,10 @@ const props = defineProps<{
     buyCost: number;
     sellPrice: number;
     stock: number;
+    profit: number;
+    margin: number;
+    totalSales: number;
+    dailySales: number;
   }[];
 }>();
 
@@ -52,12 +56,20 @@ function onInput(event: Event) {
         <span>Product</span>
         <span>Stock</span>
         <span>Buy / Sell</span>
+        <span>Profit</span>
+        <span>Margin</span>
+        <span>Total Sold</span>
+        <span>Daily Sold</span>
         <span>Action</span>
       </div>
       <div v-for="item in props.products" :key="item.id" class="row">
         <span class="name">{{ item.name }}</span>
         <span class="stock">{{ item.stock }}</span>
         <span class="price">${{ item.buyCost }} / ${{ item.sellPrice }}</span>
+        <span class="price">${{ item.profit }}</span>
+        <span class="price">{{ Math.round(item.margin * 100) }}%</span>
+        <span class="stock">{{ item.totalSales }}</span>
+        <span class="stock">{{ item.dailySales }}</span>
         <button type="button" @click="emit('buy', item.id, props.buyAmount)">
           Restock +{{ props.buyAmount }}
         </button>
@@ -140,7 +152,7 @@ button {
 
 .row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1.2fr 1fr;
+  grid-template-columns: 1.6fr 0.8fr 1.2fr 0.9fr 0.8fr 0.9fr 0.9fr 1fr;
   gap: 12px;
   align-items: center;
   padding: 12px 14px;
@@ -179,7 +191,8 @@ button {
   }
 
   .row.header {
-    display: none;
+    display: grid;
+    font-size: 0.75rem;
   }
 
   .row button {
