@@ -42,7 +42,7 @@ watch(pausedByEvent, async (isActive) => {
       <AppTitlebar />
     </header>
     <div class="flex-1 min-h-0 overflow-y-auto">
-      <main class="mx-auto flex w-full max-w-225 flex-col gap-5 px-5 py-5">
+      <main class="mx-auto flex w-full flex-col gap-1 p-2">
         <StatsPanel
           :time-label="timeLabel"
           :money="money"

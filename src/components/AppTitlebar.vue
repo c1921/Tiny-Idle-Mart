@@ -19,13 +19,13 @@ function closeWindow() {
 <template>
   <div
     data-tauri-drag-region
-    class="flex h-8 items-center justify-end bg-base-300"
+    class="flex items-center justify-end bg-base-300"
   >
     <div class="flex gap-1">
       <button
         data-tauri-drag-region="false"
         type="button"
-        class="btn btn-sm btn-square btn-text hover:bg-base-100"
+        class="btn btn-square btn-text hover:bg-base-100"
         aria-label="Minimize"
         @click="minimize"
       >
@@ -34,7 +34,7 @@ function closeWindow() {
       <button
         data-tauri-drag-region="false"
         type="button"
-        class="btn btn-sm btn-square btn-text hover:bg-base-100"
+        class="btn btn-square btn-text hover:bg-base-100"
         aria-label="Maximize"
         @click="toggleMaximize"
       >
@@ -43,7 +43,7 @@ function closeWindow() {
       <button
         data-tauri-drag-region="false"
         type="button"
-        class="btn btn-sm btn-square btn-text hover:bg-error hover:text-error-content"
+        class="btn btn-square btn-text hover:bg-error hover:text-error-content"
         aria-label="Close"
         @click="closeWindow"
       >
