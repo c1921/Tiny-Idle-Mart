@@ -18,25 +18,29 @@ function onInput(event: Event) {
   emit("update:buyAmount", Number(target.value));
 }
 
-function onProductChange(event: Event) {
-  const target = event.target as HTMLSelectElement;
-  emit("update:currentProductId", target.value);
+function selectProduct(id: string) {
+  emit("update:currentProductId", id);
 }
 </script>
 
 <template>
   <section class="panel controls">
     <div class="control">
-      <label class="label" for="product-select">Product</label>
-      <select
-        id="product-select"
-        :value="props.currentProductId"
-        @change="onProductChange"
-      >
-        <option v-for="item in props.products" :key="item.id" :value="item.id">
+      <span class="label">Product</span>
+      <div class="product-list">
+        <button
+          v-for="item in props.products"
+          :key="item.id"
+          type="button"
+          :class="[
+            'product-item',
+            item.id === props.currentProductId ? 'active' : '',
+          ]"
+          @click="selectProduct(item.id)"
+        >
           {{ item.name }}
-        </option>
-      </select>
+        </button>
+      </div>
     </div>
     <div class="control">
       <label class="label" for="buy-amount">Restock amount</label>
@@ -119,6 +123,34 @@ button {
   color: #1b1b1b;
   font-weight: 600;
   cursor: pointer;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.product-item {
+  background: #f8f4ee;
+  border: 1px solid #e3d7c8;
+  color: #3b2f26;
+  text-align: left;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.product-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(25, 20, 15, 0.12);
+}
+
+.product-item.active {
+  background: #f2b66d;
+  border-color: #e09b3c;
+  box-shadow: 0 8px 18px rgba(240, 173, 85, 0.35);
 }
 
 .quick {

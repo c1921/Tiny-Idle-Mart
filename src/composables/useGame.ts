@@ -19,7 +19,6 @@ export function useGame() {
     drink: 6,
     toy: 2,
   });
-  const currentProductId = ref(products.value[0]?.id ?? "snack");
   const buyAmount = ref(5);
 
   const pausedByPlayer = ref(false);
@@ -32,15 +31,15 @@ export function useGame() {
   let tickId: ReturnType<typeof setInterval> | null = null;
 
   const isPaused = computed(() => pausedByPlayer.value || pausedByEvent.value);
-  const currentProduct = computed(() => {
-    return (
-      products.value.find((item) => item.id === currentProductId.value) ??
-      products.value[0]
-    );
-  });
-  const stock = computed(() => inventory.value[currentProductId.value] ?? 0);
-  const buyCost = computed(() => currentProduct.value?.buyCost ?? 0);
-  const sellPrice = computed(() => currentProduct.value?.sellPrice ?? 0);
+  const productRows = computed(() =>
+    products.value.map((product) => ({
+      id: product.id,
+      name: product.name,
+      buyCost: product.buyCost,
+      sellPrice: product.sellPrice,
+      stock: inventory.value[product.id] ?? 0,
+    }))
+  );
 
   function pushLog(message: string) {
     log.value.unshift(message);
@@ -103,17 +102,19 @@ export function useGame() {
           note: "50% chance to avoid cost; 50% chance to lose 2 stock.",
           effect: () => {
             if (Math.random() < 0.5) return;
-            adjustStock(-2);
+            const target =
+              products.value[Math.floor(Math.random() * products.value.length)];
+            if (!target) return;
+            adjustStock(target.id, -2);
           },
         },
       ]);
     }
   }
 
-  function adjustStock(delta: number) {
-    const id = currentProductId.value;
-    const next = (inventory.value[id] ?? 0) + delta;
-    inventory.value[id] = Math.max(0, next);
+  function adjustStock(productId: string, delta: number) {
+    const next = (inventory.value[productId] ?? 0) + delta;
+    inventory.value[productId] = Math.max(0, next);
   }
 
   function customerStep() {
@@ -143,21 +144,18 @@ export function useGame() {
     maybeTriggerEvent();
   }
 
-  function buyStock(amount: number) {
+  function buyStock(productId: string, amount: number) {
+    const product = products.value.find((item) => item.id === productId);
+    if (!product) return;
     if (!Number.isFinite(amount) || amount <= 0) return;
-    const cost = amount * buyCost.value;
+    const cost = amount * product.buyCost;
     if (money.value < cost) {
       pushLog("Not enough cash to restock");
       return;
     }
     money.value -= cost;
-    adjustStock(amount);
-    pushLog(`Restocked ${amount} items (-$${cost})`);
-  }
-
-  function setCurrentProduct(id: string) {
-    if (!products.value.find((item) => item.id === id)) return;
-    currentProductId.value = id;
+    adjustStock(productId, amount);
+    pushLog(`Restocked ${amount} ${product.name} (-$${cost})`);
   }
 
   function togglePause() {
@@ -181,13 +179,8 @@ export function useGame() {
   return {
     totalMinutes,
     money,
-    buyCost,
-    sellPrice,
     buyAmount,
-    products,
-    currentProductId,
-    currentProduct,
-    stock,
+    productRows,
     pausedByPlayer,
     pausedByEvent,
     eventTitle,
@@ -197,7 +190,6 @@ export function useGame() {
     isPaused,
     timeLabel,
     buyStock,
-    setCurrentProduct,
     togglePause,
     handleEventOption,
   };

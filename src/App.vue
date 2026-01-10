@@ -1,20 +1,15 @@
 <script setup lang="ts">
 import ActivityLog from "./components/ActivityLog.vue";
-import ControlsPanel from "./components/ControlsPanel.vue";
 import EventPanel from "./components/EventPanel.vue";
 import GameHeader from "./components/GameHeader.vue";
+import ProductsPanel from "./components/ProductsPanel.vue";
 import StatsPanel from "./components/StatsPanel.vue";
 import { useGame } from "./composables/useGame";
 
 const {
   money,
-  stock,
-  buyCost,
-  sellPrice,
   buyAmount,
-  products,
-  currentProductId,
-  currentProduct,
+  productRows,
   pausedByPlayer,
   pausedByEvent,
   eventTitle,
@@ -38,17 +33,12 @@ const {
     <StatsPanel
       :time-label="timeLabel"
       :money="money"
-      :stock="stock"
-      :buy-cost="buyCost"
-      :sell-price="sellPrice"
-      :product-name="currentProduct?.name ?? 'Unknown'"
-    />
-    <ControlsPanel
-      v-model:buy-amount="buyAmount"
-      v-model:current-product-id="currentProductId"
       :is-paused="isPaused"
       :event-title="eventTitle"
-      :products="products"
+    />
+    <ProductsPanel
+      v-model:buy-amount="buyAmount"
+      :products="productRows"
       @buy="buyStock"
     />
     <EventPanel

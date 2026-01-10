@@ -2,10 +2,8 @@
 const props = defineProps<{
   timeLabel: string;
   money: number;
-  stock: number;
-  buyCost: number;
-  sellPrice: number;
-  productName: string;
+  isPaused: boolean;
+  eventTitle: string;
 }>();
 </script>
 
@@ -20,16 +18,12 @@ const props = defineProps<{
       <span class="value">${{ props.money }}</span>
     </div>
     <div class="stat">
-      <span class="label">Stock</span>
-      <span class="value">{{ props.stock }}</span>
+      <span class="label">Status</span>
+      <span class="value">{{ props.isPaused ? "Paused" : "Running" }}</span>
     </div>
     <div class="stat">
-      <span class="label">Product</span>
-      <span class="value">{{ props.productName }}</span>
-    </div>
-    <div class="stat">
-      <span class="label">Buy / Sell</span>
-      <span class="value">${{ props.buyCost }} / ${{ props.sellPrice }}</span>
+      <span class="label">Event</span>
+      <span class="value">{{ props.eventTitle }}</span>
     </div>
   </section>
 </template>
