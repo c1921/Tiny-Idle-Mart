@@ -74,41 +74,41 @@ function onInput(event: Event) {
         </div>
       </div>
     </div>
-    <div class="mt-4 overflow-x-auto">
-      <div class="min-w-[760px] space-y-2">
-        <div class="grid grid-cols-[1.6fr_0.8fr_1.2fr_0.9fr_0.8fr_0.9fr_0.9fr_1fr] gap-3 px-3 text-xs font-semibold uppercase tracking-[0.15em] text-base-content/60">
-          <span>Product</span>
-          <span>Stock</span>
-          <span>Buy / Sell</span>
-          <span>Profit</span>
-          <span>Margin</span>
-          <span>Total Sold</span>
-          <span>Daily Sold</span>
-          <span class="text-right">Action</span>
-        </div>
-        <div
-          v-for="item in props.products"
-          :key="item.id"
-          class="grid grid-cols-[1.6fr_0.8fr_1.2fr_0.9fr_0.8fr_0.9fr_0.9fr_1fr] items-center gap-3 rounded-xl border border-base-300/50 bg-base-200 px-3 py-2 text-sm"
-        >
-          <span class="font-semibold">{{ item.name }}</span>
-          <span>{{ item.stock }}</span>
-          <span class="whitespace-nowrap">
-            ${{ item.buyCost }} / ${{ item.sellPrice }}
-          </span>
-          <span>${{ item.profit }}</span>
-          <span>{{ Math.round(item.margin * 100) }}%</span>
-          <span>{{ item.totalSales }}</span>
-          <span>{{ item.dailySales }}</span>
-          <button
-            class="btn btn-success btn-sm justify-self-end whitespace-nowrap"
-            type="button"
-            @click="emit('buy', item.id, props.buyAmount)"
-          >
-            Restock +{{ props.buyAmount }}
-          </button>
-        </div>
-      </div>
+    <div class="mt-4 w-full overflow-x-auto">
+      <table class="table min-w-[760px]">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Stock</th>
+            <th>Buy / Sell</th>
+            <th>Profit</th>
+            <th>Margin</th>
+            <th>Total Sold</th>
+            <th>Daily Sold</th>
+            <th class="text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in props.products" :key="item.id">
+            <td class="font-semibold">{{ item.name }}</td>
+            <td>{{ item.stock }}</td>
+            <td class="whitespace-nowrap">${{ item.buyCost }} / ${{ item.sellPrice }}</td>
+            <td>${{ item.profit }}</td>
+            <td>{{ Math.round(item.margin * 100) }}%</td>
+            <td>{{ item.totalSales }}</td>
+            <td>{{ item.dailySales }}</td>
+            <td class="text-right">
+              <button
+                class="btn btn-success btn-sm whitespace-nowrap"
+                type="button"
+                @click="emit('buy', item.id, props.buyAmount)"
+              >
+                Restock +{{ props.buyAmount }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 </template>
