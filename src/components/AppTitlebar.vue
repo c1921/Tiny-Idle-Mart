@@ -19,7 +19,7 @@ function closeWindow() {
 <template>
   <div
     data-tauri-drag-region
-    class="flex items-center justify-end bg-base-300"
+    class="flex items-center justify-end bg-base-300 border-b border-base-100"
   >
     <div class="flex gap-1">
       <button

@@ -58,7 +58,7 @@ const handleTimeClick = () => {
 </script>
 
 <template>
-  <div class="bg-base-300">
+  <div class="bg-base-300 border-t border-base-100">
     <div class="mx-auto flex w-full flex-wrap items-center gap-3 px-4">
       <button :class="[
         'btn btn-text',

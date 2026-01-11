@@ -6,6 +6,7 @@ import BottomBar from "./components/BottomBar.vue";
 import EventPanel from "./components/EventPanel.vue";
 import ProductsPanel from "./components/ProductsPanel.vue";
 import StatsPanel from "./components/StatsPanel.vue";
+import VerticalTabs from "./components/VerticalTabs.vue";
 import { useGame } from "./composables/useGame";
 
 onMounted(() => {
@@ -41,21 +42,51 @@ watch(pausedByEvent, async (isActive) => {
     <header>
       <AppTitlebar />
     </header>
-    <div class="flex-1 min-h-0 overflow-y-auto">
-      <main class="mx-auto flex w-full flex-col gap-1 p-2">
-        <StatsPanel
-          :time-label="timeLabel"
-          :money="money"
-          :is-paused="isPaused"
-          :event-title="eventTitle"
-        />
-        <ProductsPanel
-          v-model:buy-amount="buyAmount"
-          :products="productRows"
-          @buy="buyStock"
-        />
-        <ActivityLog :log="log" />
-      </main>
+    <div class="flex-1 min-h-0 overflow-hidden">
+      <div class="flex h-full">
+        <aside class="bg-base-200 p-2 border-r border-base-100">
+          <VerticalTabs />
+        </aside>
+        <main class="flex-1 min-h-0 overflow-y-auto p-2">
+          <div class="mx-auto flex w-full flex-col gap-2">
+            <section
+              id="tabs-vertical-1"
+              role="tabpanel"
+              aria-labelledby="tabs-vertical-item-1"
+              class="flex flex-col gap-2"
+            >
+              <StatsPanel
+                :time-label="timeLabel"
+                :money="money"
+                :is-paused="isPaused"
+                :event-title="eventTitle"
+              />
+              <ProductsPanel
+                v-model:buy-amount="buyAmount"
+                :products="productRows"
+                @buy="buyStock"
+              />
+              <ActivityLog :log="log" />
+            </section>
+            <section
+              id="tabs-vertical-2"
+              class="hidden rounded-box bg-base-100 p-6 text-base-content/70"
+              role="tabpanel"
+              aria-labelledby="tabs-vertical-item-2"
+            >
+              Profile content is coming soon.
+            </section>
+            <section
+              id="tabs-vertical-3"
+              class="hidden rounded-box bg-base-100 p-6 text-base-content/70"
+              role="tabpanel"
+              aria-labelledby="tabs-vertical-item-3"
+            >
+              Messages will appear here.
+            </section>
+          </div>
+        </main>
+      </div>
     </div>
     <footer>
       <BottomBar
