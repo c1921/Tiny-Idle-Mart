@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tailwindcss-intersect";
+@plugin "tailwindcss-motion";
 
 @plugin "flyonui" {
     themes: light --default, mydark --prefersdark;
