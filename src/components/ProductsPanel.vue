@@ -75,7 +75,7 @@ function onInput(event: Event) {
       </div>
     </div>
     <div class="mt-4 w-full overflow-x-auto">
-      <table class="table min-w-[760px]">
+      <table class="table">
         <thead>
           <tr>
             <th>Product</th>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { listen } from "@tauri-apps/api/event";
 import ActivityLog from "./components/ActivityLog.vue";
@@ -10,21 +10,10 @@ import StatsPanel from "./components/StatsPanel.vue";
 import VerticalTabs from "./components/VerticalTabs.vue";
 import { useGame } from "./composables/useGame";
 import PopupView from "./views/Popup.vue";
-import { MAIN_EVENT_NAME, openPopup } from "./windows/popup";
+import { MAIN_EVENT_NAME } from "./windows/popup";
 
 const route = useRoute();
 const isPopupRoute = computed(() => route.path === "/popup");
-
-const popupResponse = ref<unknown>(null);
-
-const formattedPopupResponse = computed(() => {
-  if (popupResponse.value === null) return "No message yet.";
-  try {
-    return JSON.stringify(popupResponse.value, null, 2);
-  } catch {
-    return String(popupResponse.value);
-  }
-});
 
 let unlistenPopup: (() => void) | null = null;
 
@@ -41,7 +30,6 @@ onMounted(async () => {
         handleEventOption(payload.index);
       }
     }
-    popupResponse.value = event.payload;
   });
 });
 
@@ -72,14 +60,6 @@ watch(pausedByEvent, async (isActive) => {
   window.HSStaticMethods?.autoInit();
 });
 
-async function handleOpenPopup() {
-  const payload = {
-    from: "main",
-    text: "Hello from the main window.",
-    at: new Date().toISOString(),
-  };
-  await openPopup(payload);
-}
 </script>
 
 <template>
@@ -90,7 +70,7 @@ async function handleOpenPopup() {
     </header>
     <div class="flex-1 min-h-0 overflow-hidden">
       <div class="flex h-full">
-        <aside class="bg-base-200 p-2 border-r border-base-100">
+        <aside>
           <VerticalTabs />
         </aside>
         <main class="flex-1 min-h-0 overflow-y-auto p-2">
@@ -101,32 +81,6 @@ async function handleOpenPopup() {
               aria-labelledby="tabs-vertical-item-1"
               class="flex flex-col gap-2"
             >
-              <div class="rounded-box bg-base-100 p-3">
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                  <div>
-                    <div class="text-sm font-semibold">Popup Demo</div>
-                    <div class="text-xs text-base-content/70">
-                      Open a native window and send a test payload.
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-sm"
-                    @click="handleOpenPopup"
-                  >
-                    Open Popup
-                  </button>
-                </div>
-                <div class="mt-2 rounded-box bg-base-200 p-2 text-[11px]">
-                  <div class="text-[10px] uppercase tracking-wide text-base-content/60">
-                    Message from popup
-                  </div>
-                  <pre
-                    class="mt-1 whitespace-pre-wrap font-mono text-[11px]"
-                    v-text="formattedPopupResponse"
-                  ></pre>
-                </div>
-              </div>
               <StatsPanel
                 :time-label="timeLabel"
                 :money="money"

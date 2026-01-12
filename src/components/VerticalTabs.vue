@@ -1,7 +1,7 @@
 <template>
-  <section class="">
+  <section class="bg-base-300 py-2 h-full">
     <nav
-      class="tabs flex-col items-start space-y-1"
+      class="tabs w-12 flex-col items-center space-y-1"
       aria-label="Tabs"
       role="tablist"
       data-tabs-vertical="true"
@@ -11,7 +11,7 @@
         v-for="(tab, index) in tabs"
         :key="tab.id"
         type="button"
-        class="h-10 opacity-50 active-tab:text-primary active-tab:opacity-100 hover:opacity-70"
+        class="h-10 w-full ml-2 rounded-l-box flex items-center justify-center opacity-50 active-tab:text-primary active-tab:opacity-100 active-tab:bg-base-200 hover:opacity-70"
         :class="{ active: index === 0 }"
         :id="`tabs-vertical-item-${tab.id}`"
         :data-tab="`#tabs-vertical-${tab.id}`"
@@ -20,7 +20,7 @@
         :aria-selected="index === 0 ? 'true' : 'false'"
         :aria-label="tab.label"
       >
-        <span :class="tab.icon" class="size-6 shrink-0"></span>
+        <span :class="tab.icon" class="mr-2 size-7 shrink-0"></span>
       </button>
     </nav>
   </section>
