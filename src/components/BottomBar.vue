@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from "vue";
+import { openPopup } from "../windows/popup";
 
 const props = defineProps<{
   timeLabel: string;
   money: number;
   eventTitle: string;
+  eventBody: string;
+  eventOptions: { label: string; note?: string }[];
   hasEvent: boolean;
   pausedByPlayer: boolean;
 }>();
@@ -55,6 +58,17 @@ const handleTimeClick = () => {
   }
   emit("toggle-pause");
 };
+
+const handleEventClick = async () => {
+  if (!props.hasEvent) return;
+  triggerRinging();
+  await openPopup({
+    kind: "event",
+    title: props.eventTitle,
+    body: props.eventBody,
+    options: props.eventOptions,
+  });
+};
 </script>
 
 <template>
@@ -86,11 +100,8 @@ const handleTimeClick = () => {
       <button
         class="btn btn-text ml-auto"
         type="button"
-        aria-haspopup="dialog"
-        aria-expanded="false"
-        aria-controls="event-modal"
-        data-overlay="#event-modal"
         :disabled="!props.hasEvent"
+        @click="handleEventClick"
       >
         <span :class="[
           props.hasEvent

@@ -4,10 +4,44 @@ import { emit, listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { MAIN_EVENT_NAME, POPUP_EVENT_NAME } from "../windows/popup";
 
+type EventOption = { label: string; note?: string };
+type EventPayload = {
+  kind: "event";
+  title: string;
+  body: string;
+  options: EventOption[];
+};
+
 const lastPayload = ref<unknown>(null);
+const waitingForEvent = computed(() => lastPayload.value === null);
+
+const eventPayload = computed<EventPayload | null>(() => {
+  const payload = lastPayload.value as {
+    kind?: unknown;
+    title?: unknown;
+    body?: unknown;
+    options?: unknown;
+  } | null;
+  if (!payload || payload.kind !== "event") return null;
+  const title = typeof payload.title === "string" ? payload.title : "Event";
+  const body = typeof payload.body === "string" ? payload.body : "";
+  const options: EventOption[] = Array.isArray(payload.options)
+    ? payload.options.reduce<EventOption[]>((acc, option) => {
+        if (!option || typeof option !== "object") return acc;
+        const candidate = option as Partial<EventOption>;
+        if (typeof candidate.label !== "string" || !candidate.label) return acc;
+        acc.push({
+          label: candidate.label,
+          note: typeof candidate.note === "string" ? candidate.note : undefined,
+        });
+        return acc;
+      }, [])
+    : [];
+  return { kind: "event", title, body, options };
+});
 
 const formattedPayload = computed(() => {
-  if (lastPayload.value === null) return "No message yet.";
+  if (lastPayload.value === null) return "";
   try {
     return JSON.stringify(lastPayload.value, null, 2);
   } catch {
@@ -29,13 +63,17 @@ onBeforeUnmount(() => {
   unlisten?.();
 });
 
-async function sendPong() {
-  await emit(MAIN_EVENT_NAME, { from: "popup", action: "pong" });
-}
-
 async function closePopup() {
   await emit(MAIN_EVENT_NAME, { from: "popup", action: "close" });
   await getCurrentWindow().close();
+}
+
+async function selectEventOption(index: number) {
+  await emit(MAIN_EVENT_NAME, {
+    from: "popup",
+    action: "select-event-option",
+    index,
+  });
 }
 </script>
 
@@ -43,14 +81,41 @@ async function closePopup() {
   <div class="min-h-screen bg-base-200 p-6 text-base-content">
     <div class="mx-auto flex w-full max-w-md flex-col gap-4 rounded-box bg-base-100 p-4 shadow">
       <div class="flex flex-col gap-1">
-        <h1 class="text-lg font-semibold">Popup Window</h1>
-        <p class="text-sm text-base-content/70">
-          This is a test page rendered at the <code>/popup</code> route.
+        <h1 class="text-lg font-semibold">
+          {{ eventPayload ? eventPayload.title : "Event" }}
+        </h1>
+        <p v-if="eventPayload" class="text-sm text-base-content/70">
+          {{ eventPayload.body }}
+        </p>
+        <p v-else class="text-sm text-base-content/70">
+          Waiting for event details...
         </p>
       </div>
-      <div class="rounded-box bg-base-200 p-3 text-xs">
+      <div v-if="eventPayload" class="rounded-box bg-base-200 p-3 text-xs">
         <div class="text-[11px] uppercase tracking-wide text-base-content/60">
-          Message from main window
+          Event options
+        </div>
+        <div v-if="eventPayload.options.length" class="mt-2 grid gap-2">
+          <button
+            v-for="(option, index) in eventPayload.options"
+            :key="option.label"
+            type="button"
+            class="btn btn-warning btn-block flex-col items-start gap-1 text-left"
+            @click="selectEventOption(index)"
+          >
+            {{ option.label }}
+            <span v-if="option.note" class="text-xs font-medium text-base-content/70">
+              {{ option.note }}
+            </span>
+          </button>
+        </div>
+        <div v-else class="mt-2 text-xs text-base-content/60">
+          No options available.
+        </div>
+      </div>
+      <div v-else-if="!waitingForEvent && formattedPayload" class="rounded-box bg-base-200 p-3 text-xs">
+        <div class="text-[11px] uppercase tracking-wide text-base-content/60">
+          Unknown payload
         </div>
         <pre
           class="mt-2 whitespace-pre-wrap font-mono text-[11px]"
@@ -58,9 +123,6 @@ async function closePopup() {
         ></pre>
       </div>
       <div class="flex gap-2">
-        <button type="button" class="btn btn-primary" @click="sendPong">
-          Send Pong
-        </button>
         <button type="button" class="btn btn-ghost" @click="closePopup">
           Close Window
         </button>

@@ -5,7 +5,6 @@ import { listen } from "@tauri-apps/api/event";
 import ActivityLog from "./components/ActivityLog.vue";
 import AppTitlebar from "./components/AppTitlebar.vue";
 import BottomBar from "./components/BottomBar.vue";
-import EventPanel from "./components/EventPanel.vue";
 import ProductsPanel from "./components/ProductsPanel.vue";
 import StatsPanel from "./components/StatsPanel.vue";
 import VerticalTabs from "./components/VerticalTabs.vue";
@@ -33,6 +32,15 @@ onMounted(async () => {
   if (isPopupRoute.value) return;
   setTimeout(() => window.HSStaticMethods.autoInit(), 100);
   unlistenPopup = await listen(MAIN_EVENT_NAME, (event) => {
+    const payload = event.payload as
+      | { action?: string; index?: number }
+      | null
+      | undefined;
+    if (payload?.action === "select-event-option") {
+      if (typeof payload.index === "number") {
+        handleEventOption(payload.index);
+      }
+    }
     popupResponse.value = event.payload;
   });
 });
@@ -157,17 +165,12 @@ async function handleOpenPopup() {
         :time-label="timeLabel"
         :money="money"
         :event-title="eventTitle"
+        :event-body="eventBody"
+        :event-options="eventOptionsView"
         :has-event="pausedByEvent"
         :paused-by-player="pausedByPlayer"
         @toggle-pause="togglePause"
       />
     </footer>
-    <EventPanel
-      v-if="pausedByEvent"
-      :event-title="eventTitle"
-      :event-body="eventBody"
-      :event-options="eventOptionsView"
-      @select="handleEventOption"
-    />
   </div>
 </template>
