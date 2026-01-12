@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { emit, listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import AppTitlebar from "../components/AppTitlebar.vue";
 import { MAIN_EVENT_NAME, POPUP_EVENT_NAME } from "../windows/popup";
 
 type EventOption = { label: string; note?: string };
@@ -74,59 +75,57 @@ async function selectEventOption(index: number) {
     action: "select-event-option",
     index,
   });
+  await closePopup();
 }
 </script>
 
 <template>
-  <div class="min-h-screen bg-base-200 p-6 text-base-content">
-    <div class="mx-auto flex w-full max-w-md flex-col gap-4 rounded-box bg-base-100 p-4">
-      <div class="flex flex-col gap-1">
-        <h1 class="text-lg font-semibold">
-          {{ eventPayload ? eventPayload.title : "Event" }}
-        </h1>
-        <p v-if="eventPayload" class="text-sm text-base-content/70">
-          {{ eventPayload.body }}
-        </p>
-        <p v-else class="text-sm text-base-content/70">
-          Waiting for event details...
-        </p>
-      </div>
-      <div v-if="eventPayload" class="rounded-box bg-base-200 p-3 text-xs">
-        <div class="text-[11px] uppercase tracking-wide text-base-content/60">
-          Event options
+  <div class="flex h-screen flex-col bg-base-200 text-base-content">
+    <header>
+      <AppTitlebar :show-minimize="false" :show-maximize="false" />
+    </header>
+    <main class="flex-1 min-h-0 overflow-y-auto p-4">
+      <div class="flex w-full flex-col gap-4">
+        <div class="flex flex-col gap-1">
+          <h1 class="text-lg font-semibold">
+            {{ eventPayload ? eventPayload.title : "Event" }}
+          </h1>
+          <p v-if="eventPayload">
+            {{ eventPayload.body }}
+          </p>
+          <p v-else class="text-sm text-base-content/70">
+            Waiting for event details...
+          </p>
         </div>
-        <div v-if="eventPayload.options.length" class="mt-2 grid gap-2">
-          <button
-            v-for="(option, index) in eventPayload.options"
-            :key="option.label"
-            type="button"
-            class="btn btn-warning btn-block flex-col items-start gap-1 text-left"
-            @click="selectEventOption(index)"
-          >
-            {{ option.label }}
-            <span v-if="option.note" class="text-xs font-medium text-base-content/70">
-              {{ option.note }}
-            </span>
-          </button>
+        <div v-if="eventPayload" class="p-3">
+          <div v-if="eventPayload.options.length" class="grid gap-2">
+            <button
+              v-for="(option, index) in eventPayload.options"
+              :key="option.label"
+              type="button"
+              class="btn h-auto btn-block flex-col items-start gap-1 text-left"
+              @click="selectEventOption(index)"
+            >
+              {{ option.label }}
+              <span v-if="option.note" class="text-xs font-medium">
+                {{ option.note }}
+              </span>
+            </button>
+          </div>
+          <div v-else class="mt-2 text-xs text-base-content/60">
+            No options available.
+          </div>
         </div>
-        <div v-else class="mt-2 text-xs text-base-content/60">
-          No options available.
+        <div v-else-if="!waitingForEvent && formattedPayload" class="rounded-box bg-base-200 p-3 text-xs">
+          <div class="text-[11px] uppercase tracking-wide text-base-content/60">
+            Unknown payload
+          </div>
+          <pre
+            class="mt-2 whitespace-pre-wrap font-mono text-[11px]"
+            v-text="formattedPayload"
+          ></pre>
         </div>
       </div>
-      <div v-else-if="!waitingForEvent && formattedPayload" class="rounded-box bg-base-200 p-3 text-xs">
-        <div class="text-[11px] uppercase tracking-wide text-base-content/60">
-          Unknown payload
-        </div>
-        <pre
-          class="mt-2 whitespace-pre-wrap font-mono text-[11px]"
-          v-text="formattedPayload"
-        ></pre>
-      </div>
-      <div class="flex gap-2">
-        <button type="button" class="btn btn-ghost" @click="closePopup">
-          Close Window
-        </button>
-      </div>
-    </div>
+    </main>
   </div>
 </template>

@@ -67,6 +67,7 @@ export async function openPopup(payload?: unknown): Promise<void> {
     title: "Popup",
     width: POPUP_WIDTH,
     height: POPUP_HEIGHT,
+    decorations: false,
     resizable: true,
     focus: true,
     visible: false,
