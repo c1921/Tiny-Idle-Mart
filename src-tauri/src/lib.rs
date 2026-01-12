@@ -2,7 +2,7 @@ use tauri::{
     image::Image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
-    Manager,
+    Manager, WindowEvent,
 };
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
@@ -52,6 +52,20 @@ pub fn setup_tray(app: &tauri::AppHandle) -> tauri::Result<()> {
     Ok(())
 }
 
+pub fn setup_close_to_tray(app: &tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let app_handle = app.clone();
+        window.on_window_event(move |event| {
+            if let WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
+                if let Some(window) = app_handle.get_webview_window("main") {
+                    let _ = window.hide();
+                }
+            }
+        });
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -59,6 +73,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![greet])
         .setup(|app| {
             setup_tray(&app.handle())?;
+            setup_close_to_tray(&app.handle());
             Ok(())
         })
         .run(tauri::generate_context!())
