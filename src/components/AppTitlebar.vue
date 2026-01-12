@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { emit } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { WINDOW_PIN_EVENT_NAME } from "../windows/windowEvents";
 
 const props = withDefaults(
@@ -10,12 +11,14 @@ const props = withDefaults(
     showMaximize?: boolean;
     showClose?: boolean;
     showPin?: boolean;
+    closeToTray?: boolean;
   }>(),
   {
     showMinimize: true,
     showMaximize: true,
     showClose: true,
     showPin: true,
+    closeToTray: false,
   }
 );
 
@@ -46,8 +49,18 @@ async function togglePin() {
   await emit(WINDOW_PIN_EVENT_NAME, { pinned: next });
 }
 
-function closeWindow() {
-  appWindow.close();
+async function closeWindow() {
+  if (props.closeToTray) {
+    const popup = await WebviewWindow.getByLabel("popup");
+    if (popup) {
+      await popup.minimize();
+      await popup.hide();
+    }
+    await appWindow.minimize();
+    await appWindow.hide();
+    return;
+  }
+  await appWindow.close();
 }
 </script>
 

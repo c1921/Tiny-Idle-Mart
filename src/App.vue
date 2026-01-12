@@ -75,7 +75,7 @@ watch(pausedByEvent, async (isActive) => {
   <PopupView v-if="isPopupRoute" />
   <div v-else class="flex h-screen flex-col bg-base-200 font-sans text-base-content">
     <header>
-      <AppTitlebar />
+      <AppTitlebar :close-to-tray="true" />
     </header>
     <div class="flex-1 min-h-0 overflow-hidden border-y border-base-content/10">
       <div class="flex h-full">
