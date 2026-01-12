@@ -11,7 +11,7 @@
         v-for="(tab, index) in tabs"
         :key="tab.id"
         type="button"
-        class="h-10 w-full ml-2 rounded-l-box flex items-center justify-center opacity-50 active-tab:text-primary active-tab:opacity-100 active-tab:bg-base-200 hover:opacity-70"
+        class="h-10 w-full ml-2 rounded-l-box flex items-center justify-center opacity-50 active-tab:opacity-100 active-tab:bg-base-200 hover:opacity-70"
         :class="{ active: index === 0 }"
         :id="`tabs-vertical-item-${tab.id}`"
         :data-tab="`#tabs-vertical-${tab.id}`"

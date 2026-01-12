@@ -79,7 +79,7 @@ async function selectEventOption(index: number) {
 
 <template>
   <div class="min-h-screen bg-base-200 p-6 text-base-content">
-    <div class="mx-auto flex w-full max-w-md flex-col gap-4 rounded-box bg-base-100 p-4 shadow">
+    <div class="mx-auto flex w-full max-w-md flex-col gap-4 rounded-box bg-base-100 p-4">
       <div class="flex flex-col gap-1">
         <h1 class="text-lg font-semibold">
           {{ eventPayload ? eventPayload.title : "Event" }}

@@ -6,7 +6,6 @@ import ActivityLog from "./components/ActivityLog.vue";
 import AppTitlebar from "./components/AppTitlebar.vue";
 import BottomBar from "./components/BottomBar.vue";
 import ProductsPanel from "./components/ProductsPanel.vue";
-import StatsPanel from "./components/StatsPanel.vue";
 import VerticalTabs from "./components/VerticalTabs.vue";
 import { useGame } from "./composables/useGame";
 import PopupView from "./views/Popup.vue";
@@ -47,7 +46,6 @@ const {
   eventBody,
   eventOptionsView,
   log,
-  isPaused,
   timeLabel,
   buyStock,
   togglePause,
@@ -81,12 +79,6 @@ watch(pausedByEvent, async (isActive) => {
               aria-labelledby="tabs-vertical-item-1"
               class="flex flex-col gap-2"
             >
-              <StatsPanel
-                :time-label="timeLabel"
-                :money="money"
-                :is-paused="isPaused"
-                :event-title="eventTitle"
-              />
               <ProductsPanel
                 v-model:buy-amount="buyAmount"
                 :products="productRows"
