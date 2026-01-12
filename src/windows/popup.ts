@@ -1,6 +1,7 @@
 import { emit, listen } from "@tauri-apps/api/event";
 import {
   cursorPosition,
+  getCurrentWindow,
   monitorFromPoint,
   PhysicalPosition,
 } from "@tauri-apps/api/window";
@@ -48,12 +49,14 @@ async function getPopupPosition() {
 
 export async function openPopup(payload?: unknown): Promise<void> {
   const position = await getPopupPosition();
+  const mainAlwaysOnTop = await getCurrentWindow().isAlwaysOnTop();
   const existing = await WebviewWindow.getByLabel(POPUP_LABEL);
 
   if (existing) {
     if (position) {
       await existing.setPosition(position);
     }
+    await existing.setAlwaysOnTop(mainAlwaysOnTop);
     await existing.show();
     await existing.setFocus();
     if (payload !== undefined) {
@@ -67,6 +70,7 @@ export async function openPopup(payload?: unknown): Promise<void> {
     title: "Popup",
     width: POPUP_WIDTH,
     height: POPUP_HEIGHT,
+    alwaysOnTop: mainAlwaysOnTop,
     decorations: false,
     resizable: true,
     focus: true,

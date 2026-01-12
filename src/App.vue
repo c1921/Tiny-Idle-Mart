@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { listen } from "@tauri-apps/api/event";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import ActivityLog from "./components/ActivityLog.vue";
 import AppTitlebar from "./components/AppTitlebar.vue";
 import BottomBar from "./components/BottomBar.vue";
@@ -10,11 +11,13 @@ import VerticalTabs from "./components/VerticalTabs.vue";
 import { useGame } from "./composables/useGame";
 import PopupView from "./views/Popup.vue";
 import { MAIN_EVENT_NAME } from "./windows/popup";
+import { WINDOW_PIN_EVENT_NAME } from "./windows/windowEvents";
 
 const route = useRoute();
 const isPopupRoute = computed(() => route.path === "/popup");
 
 let unlistenPopup: (() => void) | null = null;
+let unlistenPin: (() => void) | null = null;
 
 onMounted(async () => {
   if (isPopupRoute.value) return;
@@ -30,10 +33,18 @@ onMounted(async () => {
       }
     }
   });
+  unlistenPin = await listen(WINDOW_PIN_EVENT_NAME, async (event) => {
+    const payload = event.payload as { pinned?: boolean } | null | undefined;
+    if (!payload || typeof payload.pinned !== "boolean") return;
+    const popup = await WebviewWindow.getByLabel("popup");
+    if (!popup) return;
+    await popup.setAlwaysOnTop(payload.pinned);
+  });
 });
 
 onBeforeUnmount(() => {
   unlistenPopup?.();
+  unlistenPin?.();
 });
 
 const {
@@ -66,7 +77,7 @@ watch(pausedByEvent, async (isActive) => {
     <header>
       <AppTitlebar />
     </header>
-    <div class="flex-1 min-h-0 overflow-hidden">
+    <div class="flex-1 min-h-0 overflow-hidden border-y border-base-content/10">
       <div class="flex h-full">
         <aside>
           <VerticalTabs />

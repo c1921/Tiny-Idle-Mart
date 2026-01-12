@@ -82,7 +82,7 @@ async function selectEventOption(index: number) {
 <template>
   <div class="flex h-screen flex-col bg-base-200 text-base-content">
     <header>
-      <AppTitlebar :show-minimize="false" :show-maximize="false" />
+      <AppTitlebar :show-minimize="false" :show-maximize="false" :show-pin="false" />
     </header>
     <main class="flex-1 min-h-0 overflow-y-auto p-4">
       <div class="flex w-full flex-col gap-4">

@@ -1,20 +1,30 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { emit } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { WINDOW_PIN_EVENT_NAME } from "../windows/windowEvents";
 
 const props = withDefaults(
   defineProps<{
     showMinimize?: boolean;
     showMaximize?: boolean;
     showClose?: boolean;
+    showPin?: boolean;
   }>(),
   {
     showMinimize: true,
     showMaximize: true,
     showClose: true,
+    showPin: true,
   }
 );
 
 const appWindow = getCurrentWindow();
+const isPinned = ref(false);
+
+onMounted(async () => {
+  isPinned.value = await appWindow.isAlwaysOnTop();
+});
 
 function minimize() {
   appWindow.minimize();
@@ -24,20 +34,33 @@ function toggleMaximize() {
   appWindow.toggleMaximize();
 }
 
+async function startDrag(event: MouseEvent) {
+  if (event.button !== 0) return;
+  await appWindow.startDragging();
+}
+
+async function togglePin() {
+  const next = !isPinned.value;
+  await appWindow.setAlwaysOnTop(next);
+  isPinned.value = next;
+  await emit(WINDOW_PIN_EVENT_NAME, { pinned: next });
+}
+
 function closeWindow() {
   appWindow.close();
 }
 </script>
 
 <template>
-  <div
-    data-tauri-drag-region
-    class="flex items-center justify-end bg-base-300 border-b border-base-100"
-  >
+  <div class="flex items-center bg-base-300">
+    <div
+      class="flex-1 h-10"
+      @mousedown="startDrag"
+      @dblclick.prevent
+    ></div>
     <div class="flex gap-1">
       <button
         v-if="props.showMinimize"
-        data-tauri-drag-region="false"
         type="button"
         class="btn btn-square btn-text hover:bg-base-100"
         aria-label="Minimize"
@@ -47,7 +70,6 @@ function closeWindow() {
       </button>
       <button
         v-if="props.showMaximize"
-        data-tauri-drag-region="false"
         type="button"
         class="btn btn-square btn-text hover:bg-base-100"
         aria-label="Maximize"
@@ -56,8 +78,19 @@ function closeWindow() {
         <span class="icon-[tabler--square] size-4.5 shrink-0"></span>
       </button>
       <button
+        v-if="props.showPin"
+        type="button"
+        class="btn btn-square btn-text hover:bg-base-100"
+        :aria-label="isPinned ? 'Unpin' : 'Pin'"
+        @click="togglePin"
+      >
+        <span
+          :class="isPinned ? 'icon-[tabler--pin-filled]' : 'icon-[tabler--pin]'"
+          class="size-4.5 shrink-0"
+        ></span>
+      </button>
+      <button
         v-if="props.showClose"
-        data-tauri-drag-region="false"
         type="button"
         class="btn btn-square btn-text hover:bg-error hover:text-error-content"
         aria-label="Close"
