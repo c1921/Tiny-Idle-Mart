@@ -77,7 +77,7 @@ watch(pausedByEvent, async (isActive) => {
     <header>
       <AppTitlebar :close-to-tray="true" />
     </header>
-    <div class="flex-1 min-h-0 overflow-hidden border-y border-base-content/10">
+    <div class="flex-1 min-h-0 overflow-hidden">
       <div class="flex h-full">
         <aside>
           <VerticalTabs />

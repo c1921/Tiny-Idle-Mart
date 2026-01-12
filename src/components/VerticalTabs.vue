@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-base-300 py-2 h-full">
+  <section class="bg-base-300/80 py-8 h-full">
     <nav
       class="tabs w-12 flex-col items-center space-y-1"
       aria-label="Tabs"
