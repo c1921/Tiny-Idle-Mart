@@ -31,5 +31,6 @@ const tabs = [
   { id: 1, label: "Home", icon: "icon-[tabler--home]" },
   { id: 2, label: "Profile", icon: "icon-[tabler--user]" },
   { id: 3, label: "Messages", icon: "icon-[tabler--message]" },
+  { id: 4, label: "Logs", icon: "icon-[tabler--clipboard-list]" },
 ];
 </script>

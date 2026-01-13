@@ -95,7 +95,6 @@ watch(pausedByEvent, async (isActive) => {
                 :products="productRows"
                 @buy="buyStock"
               />
-              <ActivityLog :log="log" />
             </section>
             <section
               id="tabs-vertical-2"
@@ -112,6 +111,14 @@ watch(pausedByEvent, async (isActive) => {
               aria-labelledby="tabs-vertical-item-3"
             >
               Messages will appear here.
+            </section>
+            <section
+              id="tabs-vertical-4"
+              class="flex flex-col gap-2"
+              role="tabpanel"
+              aria-labelledby="tabs-vertical-item-4"
+            >
+              <ActivityLog :log="log" />
             </section>
           </div>
         </main>
