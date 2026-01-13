@@ -24,6 +24,16 @@
     html {
         font-size: 12px;
     }
+
+    body {
+        user-select: none;
+    }
+
+    input,
+    textarea,
+    [contenteditable="true"] {
+        user-select: text;
+    }
 }
 
 @plugin "flyonui/theme" {
