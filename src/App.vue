@@ -8,7 +8,6 @@ import AppTitlebar from "./components/AppTitlebar.vue";
 import BottomBar from "./components/BottomBar.vue";
 import MiniSparkline from "./components/MiniSparkline.vue";
 import ProductsPanel from "./components/ProductsPanel.vue";
-import SingleAreaChart from "./components/SingleAreaChart.vue";
 import VerticalTabs from "./components/VerticalTabs.vue";
 import { useGame } from "./composables/useGame";
 import PopupView from "./views/Popup.vue";
@@ -61,8 +60,6 @@ const {
   log,
   minuteRevenue,
   minuteLabels,
-  minuteTimestamps,
-  revenueRangeMs,
   timeLabel,
   buyStock,
   togglePause,
@@ -102,11 +99,6 @@ watch(pausedByEvent, async (isActive) => {
                   @buy="buyStock"
                 />
                 <MiniSparkline :values="minuteRevenue" :labels="minuteLabels" />
-                <SingleAreaChart
-                  :values="minuteRevenue"
-                  :timestamps="minuteTimestamps"
-                  :range-ms="revenueRangeMs"
-                />
               </div>
             </section>
             <section
