@@ -88,13 +88,14 @@ watch(pausedByEvent, async (isActive) => {
               id="tabs-vertical-1"
               role="tabpanel"
               aria-labelledby="tabs-vertical-item-1"
-              class="flex flex-col gap-2"
             >
-              <ProductsPanel
-                v-model:buy-amount="buyAmount"
-                :products="productRows"
-                @buy="buyStock"
-              />
+              <div class="flex flex-col gap-2">
+                <ProductsPanel
+                  v-model:buy-amount="buyAmount"
+                  :products="productRows"
+                  @buy="buyStock"
+                />
+              </div>
             </section>
             <section
               id="tabs-vertical-2"
@@ -102,7 +103,9 @@ watch(pausedByEvent, async (isActive) => {
               role="tabpanel"
               aria-labelledby="tabs-vertical-item-2"
             >
-              Profile content is coming soon.
+              <div class="flex flex-col gap-2">
+                Profile content is coming soon.
+              </div>
             </section>
             <section
               id="tabs-vertical-3"
@@ -110,15 +113,19 @@ watch(pausedByEvent, async (isActive) => {
               role="tabpanel"
               aria-labelledby="tabs-vertical-item-3"
             >
-              Messages will appear here.
+              <div class="flex flex-col gap-2">
+                Messages will appear here.
+              </div>
             </section>
             <section
               id="tabs-vertical-4"
-              class="flex flex-col gap-2"
+              class="hidden"
               role="tabpanel"
               aria-labelledby="tabs-vertical-item-4"
             >
-              <ActivityLog :log="log" />
+              <div class="flex flex-col gap-2">
+                <ActivityLog :log="log" />
+              </div>
             </section>
           </div>
         </main>

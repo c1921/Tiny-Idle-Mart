@@ -61,8 +61,10 @@ export function useGame() {
   );
 
   function pushLog(message: string) {
-    log.value.unshift(message);
-    if (log.value.length > 6) log.value.pop();
+    const { day, hh, mm } = formatTime(totalMinutes.value + START_MINUTES);
+    const prefix = `Day ${day} ${hh}:${mm}`;
+    log.value.unshift(`[${prefix}] ${message}`);
+    if (log.value.length > 200) log.value.pop();
   }
 
   function formatTime(minutesTotal: number) {
