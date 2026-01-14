@@ -6,7 +6,9 @@ import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import ActivityLog from "./components/ActivityLog.vue";
 import AppTitlebar from "./components/AppTitlebar.vue";
 import BottomBar from "./components/BottomBar.vue";
+import MiniSparkline from "./components/MiniSparkline.vue";
 import ProductsPanel from "./components/ProductsPanel.vue";
+import SingleAreaChart from "./components/SingleAreaChart.vue";
 import VerticalTabs from "./components/VerticalTabs.vue";
 import { useGame } from "./composables/useGame";
 import PopupView from "./views/Popup.vue";
@@ -57,6 +59,10 @@ const {
   eventBody,
   eventOptionsView,
   log,
+  minuteRevenue,
+  minuteLabels,
+  minuteTimestamps,
+  revenueRangeMs,
   timeLabel,
   buyStock,
   togglePause,
@@ -94,6 +100,12 @@ watch(pausedByEvent, async (isActive) => {
                   v-model:buy-amount="buyAmount"
                   :products="productRows"
                   @buy="buyStock"
+                />
+                <MiniSparkline :values="minuteRevenue" :labels="minuteLabels" />
+                <SingleAreaChart
+                  :values="minuteRevenue"
+                  :timestamps="minuteTimestamps"
+                  :range-ms="revenueRangeMs"
                 />
               </div>
             </section>

@@ -7,6 +7,18 @@ const TICK_MS = 1000;
 const START_MINUTES = 8 * 60;
 
 export function useGame() {
+  const initialTimestamp = (() => {
+    const now = new Date();
+    return new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      0,
+      0,
+      0,
+      0
+    ).getTime();
+  })();
   const totalMinutes = ref(0);
   const money = ref(50);
   const products = ref<Product[]>([
@@ -31,6 +43,9 @@ export function useGame() {
   });
   const buyAmount = ref(5);
   const currentDay = ref(1);
+  const startTimestamp = ref(
+    initialTimestamp + START_MINUTES * 60 * 1000
+  );
 
   const pausedByPlayer = ref(false);
   const pausedByEvent = ref(false);
@@ -38,8 +53,15 @@ export function useGame() {
   const eventBody = ref("");
   const eventOptions = ref<EventOption[]>([]);
   const log = ref<string[]>([]);
+  const minuteRevenue = ref<number[]>([]);
+  const minuteLabels = ref<string[]>([]);
+  const minuteTimestamps = ref<number[]>([]);
 
   let tickId: ReturnType<typeof setInterval> | null = null;
+  const MAX_REVENUE_POINTS = 10;
+  const REVENUE_BUCKET_MINUTES = 10;
+  const revenueRangeMs =
+    REVENUE_BUCKET_MINUTES * MAX_REVENUE_POINTS * 60 * 1000;
 
   const isPaused = computed(() => pausedByPlayer.value || pausedByEvent.value);
   const productRows = computed(() =>
@@ -144,17 +166,17 @@ export function useGame() {
   }
 
   function customerStep() {
-    if (Math.random() >= 0.45) return;
-    if (products.value.length === 0) return;
+    if (Math.random() >= 0.45) return 0;
+    if (products.value.length === 0) return 0;
     const pick =
       products.value[Math.floor(Math.random() * products.value.length)];
-    if (!pick) return;
+    if (!pick) return 0;
 
     const desired = 1 + Math.floor(Math.random() * 3);
     const available = inventory.value[pick.id] ?? 0;
     if (available <= 0) {
       pushLog("Customer left: out of stock");
-      return;
+      return 0;
     }
 
     const bought = Math.min(desired, available);
@@ -164,6 +186,39 @@ export function useGame() {
     dailySales.value[pick.id] = (dailySales.value[pick.id] ?? 0) + bought;
     money.value += revenue;
     pushLog(`Customer bought ${bought} ${pick.name} (+$${revenue})`);
+    return revenue;
+  }
+
+  function recordMinuteRevenue(revenue: number) {
+    const isNewBucket =
+      minuteRevenue.value.length === 0 ||
+      totalMinutes.value % REVENUE_BUCKET_MINUTES === 1;
+    const nextValues = [...minuteRevenue.value];
+    const nextLabels = [...minuteLabels.value];
+
+    if (isNewBucket) {
+      const bucketStartMinutes = Math.max(0, totalMinutes.value - 1);
+      const { day, hh, mm } = formatTime(bucketStartMinutes + START_MINUTES);
+      const label = `Day ${day} ${hh}:${mm}`;
+      const timestamp =
+        startTimestamp.value + bucketStartMinutes * 60 * 1000;
+      nextValues.push(0);
+      nextLabels.push(label);
+      minuteTimestamps.value = [...minuteTimestamps.value, timestamp];
+    }
+
+    const lastIndex = nextValues.length - 1;
+    if (lastIndex >= 0) {
+      nextValues[lastIndex] += revenue;
+    }
+
+    if (nextValues.length > MAX_REVENUE_POINTS) {
+      nextValues.shift();
+      nextLabels.shift();
+      minuteTimestamps.value = minuteTimestamps.value.slice(1);
+    }
+    minuteRevenue.value = nextValues;
+    minuteLabels.value = nextLabels;
   }
 
   function tick() {
@@ -175,7 +230,8 @@ export function useGame() {
         products.value.map((item) => [item.id, 0])
       ) as Record<string, number>;
     }
-    customerStep();
+    const revenue = customerStep();
+    recordMinuteRevenue(revenue);
     maybeTriggerEvent();
   }
 
@@ -222,6 +278,10 @@ export function useGame() {
     eventBody,
     eventOptionsView,
     log,
+    minuteRevenue,
+    minuteLabels,
+    minuteTimestamps,
+    revenueRangeMs,
     isPaused,
     timeLabel,
     buyStock,
